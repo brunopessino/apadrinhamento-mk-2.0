@@ -1,0 +1,30 @@
+rules_version = '2';
+// Fotografias: públicas somente sob /public (participantes com autorização);
+// originais/privadas restritas à equipe. Somente imagens pequenas.
+service firebase.storage {
+  match /b/{bucket}/o {
+    function staffDoc() { return /databases/(default)/documents/administrators/$(request.auth.uid); }
+    function isStaff() {
+      return request.auth != null && firestore.exists(staffDoc())
+        && firestore.get(staffDoc()).data.active == true;
+    }
+    function isAdmin() { return isStaff() && firestore.get(staffDoc()).data.role == 'admin'; }
+    function validImage() {
+      return request.resource.size < 2 * 1024 * 1024
+        && request.resource.contentType.matches('image/(jpeg|png|webp)');
+    }
+
+    match /campaigns/{cid}/public/{pid}/{file} {
+      allow get: if true;      // leitura do arquivo
+      allow list: if false;    // impede enumerar todas as fotos
+      allow write: if isAdmin() && (request.resource == null || validImage());
+    }
+    match /campaigns/{cid}/private/{pid}/{file} {
+      allow read: if isStaff();
+      allow write: if isStaff() && (request.resource == null || validImage());
+    }
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

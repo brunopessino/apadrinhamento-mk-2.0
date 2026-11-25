@@ -1,0 +1,6 @@
+{
+  "projects": {
+    "staging": "SEU-PROJETO-DE-HOMOLOGACAO",
+    "production": "SEU-PROJETO-DE-PRODUCAO-2026"
+  }
+}

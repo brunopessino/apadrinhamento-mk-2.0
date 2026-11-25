@@ -1,0 +1,55 @@
+
+> apadrinhamento-mk@2.0.0 build
+> tsc --noEmit -p . && vite build
+
+vite v8.3.8 building client environment for production...
+transforming...
+✓ 2222 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                                                       1.46 kB │ gzip:   0.60 kB
+dist/assets/manrope-vietnamese-wght-normal-usUDDRr7.woff2             8.52 kB
+dist/assets/playfair-display-vietnamese-wght-normal-Cabi7G8-.woff2    9.11 kB
+dist/assets/manrope-greek-wght-normal-DL7QRZyv.woff2                  9.44 kB
+dist/assets/manrope-cyrillic-wght-normal-Dvxsihut.woff2              14.50 kB
+dist/assets/manrope-latin-ext-wght-normal-Ch3YOpNY.woff2             15.12 kB
+dist/assets/playfair-display-latin-ext-wght-normal-CT1r92Rl.woff2    21.14 kB
+dist/assets/playfair-display-cyrillic-wght-normal-5WvUvBgz.woff2     21.15 kB
+dist/assets/manrope-latin-wght-normal-DHIcAJRg.woff2                 24.83 kB
+dist/assets/playfair-display-latin-wght-normal-BOwq7MWX.woff2        38.40 kB
+dist/assets/index-BlkferWQ.css                                       66.82 kB │ gzip:  14.20 kB
+dist/assets/plus-BPvfSWew.js                                          0.19 kB │ gzip:   0.17 kB
+dist/assets/message-circle-DtW9m6ZD.js                                0.28 kB │ gzip:   0.23 kB
+dist/assets/pencil-D8HIU4e8.js                                        0.31 kB │ gzip:   0.25 kB
+dist/assets/trash-CtNB1SwQ.js                                         0.38 kB │ gzip:   0.25 kB
+dist/assets/file-spreadsheet-CKRSu-fG.js                              0.46 kB │ gzip:   0.29 kB
+dist/assets/NotFound-CQ0HWzC-.js                                      0.63 kB │ gzip:   0.39 kB
+dist/assets/rolldown-runtime-COiEfhsA.js                              1.11 kB │ gzip:   0.62 kB
+dist/assets/Audit-BAM6F096.js                                         1.17 kB │ gzip:   0.55 kB
+dist/assets/ui-BbP1SU8s.js                                            1.43 kB │ gzip:   0.70 kB
+dist/assets/shared-szUkHlXl.js                                        1.46 kB │ gzip:   0.80 kB
+dist/assets/Sponsors-i9ide82M.js                                      2.32 kB │ gzip:   1.08 kB
+dist/assets/createLucideIcon-D4RuWIOs.js                              3.29 kB │ gzip:   1.58 kB
+dist/assets/Contributions-D6oTIK3B.js                                 3.70 kB │ gzip:   1.51 kB
+dist/assets/Dashboard-CUbc3FHZ.js                                     3.72 kB │ gzip:   1.58 kB
+dist/assets/Privacy-BiOnEGNX.js                                       3.78 kB │ gzip:   1.44 kB
+dist/assets/Sponsorships-BQt59wND.js                                  8.06 kB │ gzip:   2.61 kB
+dist/assets/jsx-runtime-CldxteV5.js                                   8.24 kB │ gzip:   3.11 kB
+dist/assets/Campaigns-D4c9Tjpo.js                                     8.62 kB │ gzip:   2.84 kB
+dist/assets/Reports-TCJP4k7z.js                                      11.27 kB │ gzip:   4.53 kB
+dist/assets/firebaseService-Cr2aSYJE.js                              11.34 kB │ gzip:   4.01 kB
+dist/assets/demoService-Dp7IjkCt.js                                  12.80 kB │ gzip:   5.08 kB
+dist/assets/ImportPage-C_XT4stX.js                                   14.36 kB │ gzip:   5.25 kB
+dist/assets/AdminApp-CiZs8hHV.js                                     14.46 kB │ gzip:   5.07 kB
+dist/assets/Participants-C5EVpWtw.js                                 16.60 kB │ gzip:   5.41 kB
+dist/assets/papaparse.min-rHJ2DXBV.js                                18.83 kB │ gzip:   6.84 kB
+dist/assets/index-DqbhH2Q0.js                                       317.66 kB │ gzip:  99.42 kB
+dist/assets/firebase-Br-dHcjh.js                                    601.13 kB │ gzip: 180.05 kB
+dist/assets/exceljs-M4UAhqUV.js                                     929.38 kB │ gzip: 256.38 kB
+
+[plugin builtin:vite-reporter] 
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 1.08s

@@ -1,0 +1,53 @@
+{
+  "name": "apadrinhamento-mk",
+  "private": true,
+  "version": "2.0.0",
+  "type": "module",
+  "description": "Apadrinhamento MK 2.0 — Campanha de Natal do Meu Kantinho Centro de Cultura",
+  "scripts": {
+    "dev": "vite",
+    "dev:demo": "VITE_DATA_MODE=demo vite",
+    "build": "tsc --noEmit -p . && vite build",
+    "build:demo": "tsc --noEmit -p . && VITE_DATA_MODE=demo vite build --outDir dist-demo",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit -p .",
+    "test": "vitest run",
+    "test:rules": "firebase emulators:exec --only firestore,storage --project demo-mk-test \"vitest run --config vitest.rules.config.ts\"",
+    "test:e2e": "playwright test",
+    "emulators": "firebase emulators:start --project demo-mk-test",
+    "backup:legacy": "node scripts/backup-firestore.mjs",
+    "migrate:2025": "node scripts/migrate-2025.mjs",
+    "build:preview": "tsc --noEmit -p . && VITE_DATA_MODE=demo VITE_ROUTER=memory vite build --base ./ --outDir dist-preview"
+  },
+  "dependencies": {
+    "@fontsource-variable/manrope": "^5.3.0",
+    "@fontsource-variable/playfair-display": "^5.3.0",
+    "@fontsource/great-vibes": "^5.3.0",
+    "exceljs": "^4.4.0",
+    "firebase": "^12.19.0",
+    "lucide-react": "^1.80.0",
+    "papaparse": "^5.7.1",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "react-router-dom": "^7.18.7"
+  },
+  "devDependencies": {
+    "@firebase/rules-unit-testing": "^5.0.2",
+    "@playwright/test": "^1.65.1",
+    "@tailwindcss/vite": "^4.3.5",
+    "@testing-library/jest-dom": "^8.0.0",
+    "@testing-library/react": "^16.3.3",
+    "@testing-library/user-event": "^14.6.13",
+    "@types/papaparse": "^5.5.2",
+    "@types/react": "^19.3.3",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.3.0",
+    "firebase-admin": "^14.5.1",
+    "firebase-tools": "^15.37.0",
+    "jsdom": "^31.0.1",
+    "tailwindcss": "^4.3.5",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.8",
+    "vitest": "^5.1.2"
+  }
+}

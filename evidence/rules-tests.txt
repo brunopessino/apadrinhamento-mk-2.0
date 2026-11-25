@@ -1,0 +1,29 @@
+
+> apadrinhamento-mk@2.0.0 test:rules
+> firebase emulators:exec --only firestore,storage --project demo-mk-test "vitest run --config vitest.rules.config.ts"
+
+i  emulators: Starting emulators: firestore, storage
+i  emulators: Detected demo project ID "demo-mk-test", emulated services will use a demo configuration and attempts to access non-emulated services for this project will fail.
+⚠  hub: Error when trying to check port 4400 on ::1: Error: listen EAFNOSUPPORT: address family not supported ::1:4400
+⚠  hub: Port 4400 is available on 127.0.0.1 but not ::1. This may cause issues with some clients.
+⚠  hub: If you encounter connectivity issues, consider switching to a different port or explicitly specifying "host": "<ip address>" instead of hostname in firebase.json
+⚠  logging: Error when trying to check port 4500 on ::1: Error: listen EAFNOSUPPORT: address family not supported ::1:4500
+⚠  logging: Port 4500 is available on 127.0.0.1 but not ::1. This may cause issues with some clients.
+⚠  logging: If you encounter connectivity issues, consider switching to a different port or explicitly specifying "host": "<ip address>" instead of hostname in firebase.json
+⚠  firestore: Error when trying to check port 8080 on ::1: Error: listen EAFNOSUPPORT: address family not supported ::1:8080
+⚠  firestore: Port 8080 is available on 127.0.0.1 but not ::1. This may cause issues with some clients.
+⚠  firestore: If you encounter connectivity issues, consider switching to a different port or explicitly specifying "host": "<ip address>" instead of hostname in firebase.json
+⚠  firestore.websocket: Error when trying to check port 9150 on ::1: Error: listen EAFNOSUPPORT: address family not supported ::1:9150
+⚠  firestore: Port 9150 is available on 127.0.0.1 but not ::1. This may cause issues with some clients.
+⚠  firestore: If you encounter connectivity issues, consider switching to a different port or explicitly specifying "host": "<ip address>" instead of hostname in firebase.json
+⚠  storage: Error when trying to check port 9199 on ::1: Error: listen EAFNOSUPPORT: address family not supported ::1:9199
+⚠  storage: Port 9199 is available on 127.0.0.1 but not ::1. This may cause issues with some clients.
+⚠  storage: If you encounter connectivity issues, consider switching to a different port or explicitly specifying "host": "<ip address>" instead of hostname in firebase.json
+i  firestore: downloading cloud-firestore-emulator-v1.22.0.jar...
+⚠  Unable to fetch the CLI MOTD and remote config. This is not a fatal error, but may indicate an issue with your network connection.
+i  emulators: Shutting down emulators.
+i  firestore: Stopping Firestore Emulator
+i  hub: Stopping emulator hub
+
+Error: Failed to make request to https://storage.googleapis.com/firebase-preview-drop/emulator/cloud-firestore-emulator-v1.22.0.jar
+exit 1

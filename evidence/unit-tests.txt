@@ -1,0 +1,53 @@
+
+> apadrinhamento-mk@2.0.0 typecheck
+> tsc --noEmit -p .
+
+
+ RUN  v5.1.2 /home/claude/apadrinhamento-mk
+
+ ✓ src/components/components.test.tsx > PixBox > exibe o texto integral e copia somente a chave 96ms
+ ✓ src/components/components.test.tsx > ParticipantCard > mostra o bloco Pix completo (apadrinhado=false) 14ms
+ ✓ src/components/components.test.tsx > ParticipantCard > mostra o bloco Pix completo (apadrinhado=true) 17ms
+ ✓ src/components/components.test.tsx > ParticipantCard > usa placeholder neutro sem foto e não expõe dados privados 8ms
+ ✓ src/components/components.test.tsx > ChristmasCelebration > percorre a linha do tempo uma única vez e limpa temporizadores 44ms
+ ✓ src/components/components.test.tsx > ChristmasCelebration > pode ser encerrada imediatamente 7ms
+ ✓ src/components/components.test.tsx > ChristmasCelebration > respeita prefers-reduced-motion com versão estática 4ms
+ ✓ src/components/components.test.tsx > ChristmasCelebration > desmontagem no meio da animação não deixa temporizadores 4ms
+ ✓ src/components/components.test.tsx > ChristmasCelebration > falha na animação não derruba o conteúdo ao redor 7ms
+ ✓ src/components/components.test.tsx > SponsorDialog — animação somente após confirmação do servidor > valida formulário antes de enviar 39ms
+ ✓ src/components/components.test.tsx > SponsorDialog — animação somente após confirmação do servidor > sucesso: mostra celebração, título, protocolo e anúncio acessível 165ms
+ ✓ src/components/components.test.tsx > SponsorDialog — animação somente após confirmação do servidor > conflito: mensagem oficial e SEM animação 145ms
+ ✓ src/components/components.test.tsx > SponsorDialog — animação somente após confirmação do servidor > erro de rede: SEM animação e permite tentar de novo 154ms
+ ✓ src/services/services.test.ts > apadrinhamento — concorrência e idempotência (camada de dados) > 10 tentativas simultâneas: exatamente uma confirmada 26ms
+ ✓ src/services/services.test.ts > apadrinhamento — concorrência e idempotência (camada de dados) > clique repetido após confirmação não cria registro duplicado 6ms
+ ✓ src/services/services.test.ts > apadrinhamento — concorrência e idempotência (camada de dados) > valida dados no serviço (não confia no formulário) 3ms
+ ✓ src/services/services.test.ts > apadrinhamento — concorrência e idempotência (camada de dados) > mesma pessoa pode apadrinhar mais de um participante 6ms
+ ✓ src/services/services.test.ts > apadrinhamento — concorrência e idempotência (camada de dados) > campanha arquivada (2025) não aceita apadrinhamentos e fica isolada 3ms
+ ✓ src/services/services.test.ts > administração — permissões, cancelamento e liberação > cancela, registra histórico e libera o participante 8ms
+ ✓ src/services/services.test.ts > administração — permissões, cancelamento e liberação > operador não publica, não cancela e não importa 2ms
+ ✓ src/services/services.test.ts > administração — permissões, cancelamento e liberação > não publica sem autorização de exposição 2ms
+ ✓ src/services/services.test.ts > administração — permissões, cancelamento e liberação > contribuição Pix não altera disponibilidade 3ms
+ ✓ src/services/services.test.ts > administração — permissões, cancelamento e liberação > dados públicos não contêm nome completo nem telefone 8ms
+ ✓ src/services/services.test.ts > importação de planilha > mapeia colunas do Forms, valida, preserva acentos/tamanhos e detecta duplicidades 16ms
+ ✓ src/services/services.test.ts > importação de planilha > alerta ao importar formulário de 2025 em 2026 0ms
+ ✓ src/services/services.test.ts > importação de planilha > importação cria registros NÃO publicados na campanha escolhida 2ms
+ ✓ src/services/services.test.ts > relatórios > inclui campanha e data, e protege contra fórmulas 23ms
+ ✓ src/lib/lib.test.ts > Pix — requisito inegociável > mantém exatamente os textos e valores fornecidos 2ms
+ ✓ src/lib/lib.test.ts > telefone > aplica máscara e valida celular/fixo com DDD 1ms
+ ✓ src/lib/lib.test.ts > texto > gera nome de exibição minimizado preservando acentos 0ms
+ ✓ src/lib/lib.test.ts > texto > interpreta idade e categoria 1ms
+ ✓ src/lib/lib.test.ts > texto > chave de duplicidade não usa somente o nome 1ms
+ ✓ src/lib/lib.test.ts > protocolo > segue o formato validado pelas regras 2ms
+ ✓ src/lib/lib.test.ts > segurança de exportação e HTML > neutraliza injeção de fórmulas 0ms
+ ✓ src/lib/lib.test.ts > segurança de exportação e HTML > escapa HTML 0ms
+ ✓ src/lib/lib.test.ts > filtros e indicadores > busca ignorando acentos e filtra 9ms
+ ✓ src/lib/lib.test.ts > filtros e indicadores > calcula indicadores reais 0ms
+
+ Test Files  3 passed (3)
+      Tests  37 passed (37)
+   Start at  15:29:51
+   Duration  3.64s (environment 53%, tests 26%, import 10%, setup 8%, transform 3%, worker 1%)
+
+    Isolate  3 workers spawned · ~694ms startup each (spawn + environment, per file)
+             at least ~1.39s faster with isolate: false — reuses workers across files instead of one per file
+

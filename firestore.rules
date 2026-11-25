@@ -1,0 +1,159 @@
+rules_version = '2';
+// =====================================================================
+// Apadrinhamento MK 2.0 — Firestore Security Rules
+// Princípios: negar por padrão; separar público/privado; validar no
+// servidor a única operação anônima (apadrinhar), de forma atômica.
+// ATENÇÃO: publicar estas regras no projeto da campanha de 2025 bloqueia
+// o site antigo (coleção "afilhados" passa a ser somente leitura admin).
+// Veja docs/IMPLANTACAO.md antes de qualquer deploy.
+// =====================================================================
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() { return request.auth != null; }
+    function staffPath() { return /databases/$(database)/documents/administrators/$(request.auth.uid); }
+    function isStaff() {
+      return signedIn() && exists(staffPath())
+        && get(staffPath()).data.active == true
+        && get(staffPath()).data.role in ['admin', 'operator'];
+    }
+    function isAdmin() { return isStaff() && get(staffPath()).data.role == 'admin'; }
+    function str(v, min, max) { return v is string && v.size() >= min && v.size() <= max; }
+
+    // ---------- Configuração global (campanha ativa) ----------
+    match /config/{docId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // ---------- Equipe ----------
+    match /administrators/{uid} {
+      allow read: if signedIn() && (request.auth.uid == uid || isAdmin());
+      // Administradores gerenciam a equipe, mas não alteram o próprio papel.
+      allow create, update: if isAdmin() && uid != request.auth.uid
+        && request.resource.data.role in ['admin', 'operator']
+        && request.resource.data.active is bool;
+      allow delete: if isAdmin() && uid != request.auth.uid;
+    }
+
+    // ---------- Logs administrativos (append-only) ----------
+    match /auditLogs/{id} {
+      allow read: if isAdmin();
+      allow create: if isStaff()
+        && request.resource.data.actorUid == request.auth.uid
+        && request.resource.data.role == get(staffPath()).data.role
+        && request.resource.data.createdAt == request.time
+        && str(request.resource.data.action, 1, 60)
+        && str(request.resource.data.summary, 0, 500)
+        && request.resource.data.campaignId is string;
+      allow update, delete: if false;
+    }
+
+    // ---------- Campanhas ----------
+    match /campaigns/{cid} {
+      function campaign() { return get(/databases/$(database)/documents/campaigns/$(cid)); }
+      function pubPath(pid) { return /databases/$(database)/documents/campaigns/$(cid)/publicParticipants/$(pid); }
+      function spPath(pid) { return /databases/$(database)/documents/campaigns/$(cid)/sponsorships/$(pid); }
+
+      // Rascunhos e campanhas arquivadas (ex.: 2025) não são públicos.
+      allow read: if (resource.data.status in ['active', 'closed']) || isStaff();
+      allow create, update: if isAdmin() && request.resource.data.status in ['draft', 'active', 'closed', 'archived'];
+      allow delete: if false;
+
+      // ----- Documento público do participante (sem dados sensíveis) -----
+      match /publicParticipants/{pid} {
+        // Público somente em campanha aberta/encerrada (rascunho e arquivada ficam privadas).
+        allow read: if (resource.data.published == true && campaign().data.status in ['active', 'closed']) || isStaff();
+        // Invariante: admin nunca pode divergir `sponsored` da existência do apadrinhamento.
+        allow create: if isAdmin() && request.resource.data.sponsored == existsAfter(spPath(pid));
+        allow update: if (isAdmin() && request.resource.data.sponsored == existsAfter(spPath(pid))) || sponsorTransition(pid);
+        allow delete: if isAdmin();
+
+        // Única escrita anônima: available -> sponsored, junto com a criação
+        // do documento de apadrinhamento na MESMA transação.
+        function sponsorTransition(pid) {
+          return resource.data.published == true
+            && resource.data.sponsored == false
+            && request.resource.data.sponsored == true
+            && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['sponsored', 'sponsoredAt', 'updatedAt'])
+            && request.resource.data.sponsoredAt == request.time
+            && request.resource.data.updatedAt == request.time
+            && campaign().data.status == 'active'
+            && !exists(spPath(pid))
+            && existsAfter(spPath(pid));
+        }
+      }
+
+      // ----- Dados privados do participante -----
+      match /participants/{pid} {
+        allow read: if isStaff();
+        allow create: if isAdmin() || (isStaff() && request.resource.data.published == false);
+        allow update: if isAdmin() || (isStaff() && resource.data.published == false && request.resource.data.published == false);
+        allow delete: if false; // arquivar em vez de excluir
+      }
+
+      // ----- Apadrinhamento ativo (ID = ID do participante => unicidade) -----
+      match /sponsorships/{pid} {
+        allow read: if isStaff();
+        allow create: if validSponsorship(pid);
+        allow update: if isStaff()
+          && request.resource.data.diff(resource.data).affectedKeys()
+               .hasOnly(['status', 'statusChangedAt', 'contactedAt', 'receivedAt', 'deliveredAt', 'adminNotes', 'updatedAt'])
+          && request.resource.data.status in ['confirmed', 'contacted', 'received', 'delivered']
+          && (!('adminNotes' in request.resource.data) || str(request.resource.data.adminNotes, 0, 1000));
+        allow delete: if isAdmin(); // cancelamento: movido antes para sponsorshipHistory
+
+        function validSponsorship(pid) {
+          let d = request.resource.data;
+          let pub = get(pubPath(pid));
+          return d.keys().hasOnly(['campaignId', 'participantId', 'participantDisplayName', 'sponsorName', 'sponsorPhone', 'protocol', 'status', 'consent', 'createdAt', 'statusChangedAt'])
+            && d.keys().hasAll(['campaignId', 'participantId', 'participantDisplayName', 'sponsorName', 'sponsorPhone', 'protocol', 'status', 'consent', 'createdAt'])
+            && d.campaignId == cid
+            && d.participantId == pid
+            && str(d.sponsorName, 2, 80)
+            && d.sponsorPhone is string && d.sponsorPhone.matches('^55[1-9][1-9][0-9]{8,9}$')
+            && d.protocol is string && d.protocol.matches('^MK[0-9]{2}-[A-Z2-9]{8}$')
+            && d.status == 'confirmed'
+            && d.consent == true
+            && d.createdAt == request.time
+            && (!('statusChangedAt' in d) || d.statusChangedAt == request.time)
+            && campaign().data.status == 'active'
+            && pub.data.published == true
+            && pub.data.sponsored == false
+            && d.participantDisplayName == pub.data.displayName
+            && getAfter(pubPath(pid)).data.sponsored == true;
+        }
+      }
+
+      match /sponsorshipHistory/{id} {
+        allow read: if isStaff();
+        allow create: if isAdmin();
+        allow update, delete: if false;
+      }
+
+      match /contributions/{id} {
+        allow read: if isStaff();
+        allow create: if isStaff() && request.resource.data.amountCents is int && request.resource.data.amountCents > 0;
+        allow update: if false;
+        allow delete: if isAdmin();
+      }
+
+      match /importJobs/{id} {
+        allow read: if isStaff();
+        allow create: if isAdmin();
+        allow update, delete: if false;
+      }
+    }
+
+    // ---------- Legado 2025 (preservado, somente leitura administrativa) ----------
+    match /afilhados/{id} {
+      allow read: if isAdmin();
+      allow write: if false;
+    }
+
+    // ---------- Todo o resto: negado ----------
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

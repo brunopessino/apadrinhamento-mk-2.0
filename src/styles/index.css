@@ -1,0 +1,195 @@
+@import "tailwindcss";
+@import "@fontsource-variable/playfair-display";
+@import "@fontsource-variable/manrope";
+@import "@fontsource/great-vibes/latin-400.css";
+
+/* ================================================================
+   Design tokens — Apadrinhamento MK 2.0 · Natal 2026
+   Contrastes verificados (texto sobre --color-cream):
+   red 6.4:1 · burgundy 10.4:1 · pine 9.6:1 · graphite 14.9:1 · gold-ink 4.9:1
+   Ouro (#C5A059) e amarelo (#EABF35) apenas em elementos decorativos/fundos.
+   ================================================================ */
+@theme {
+  --color-red: #B5222D;
+  --color-red-600: #9C1C26;
+  --color-burgundy: #70252B;
+  --color-pine: #204D38;
+  --color-pine-700: #183B2B;
+  --color-yellow: #EABF35;
+  --color-gold: #C5A059;
+  --color-gold-ink: #7A5C17;
+  --color-cream: #F9F6EF;
+  --color-cream-200: #F2ECDF;
+  --color-paper: #FFFDF8;
+  --color-graphite: #242424;
+  --color-muted: #5C5550;
+  --color-line: #E6DDCB;
+
+  --font-display: "Playfair Display Variable", "Playfair Display", Georgia, "Times New Roman", serif;
+  --font-script: "Great Vibes", "Segoe Script", cursive;
+  --color-burgundy-900: #3E1418;
+  --color-pine-900: #0F2A1E;
+  --font-sans: "Manrope Variable", Manrope, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+
+  --radius-card: 1.25rem;
+  --radius-pill: 999px;
+
+  --shadow-soft: 0 1px 2px rgb(36 36 36 / .04), 0 6px 18px -6px rgb(112 37 43 / .12);
+  --shadow-lift: 0 2px 4px rgb(36 36 36 / .05), 0 18px 40px -12px rgb(112 37 43 / .22);
+  --shadow-gold: 0 0 0 1px rgb(197 160 89 / .35), 0 10px 30px -10px rgb(197 160 89 / .45);
+
+  --ease-out-soft: cubic-bezier(.22, .8, .3, 1);
+  --ease-spring: cubic-bezier(.34, 1.56, .64, 1);
+}
+
+@layer base {
+  html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  body {
+    @apply text-graphite font-sans antialiased;
+    min-height: 100dvh;
+    overflow-x: hidden;
+    background-color: var(--color-cream);
+    /* papel creme com grão leve */
+    background-image:
+      radial-gradient(circle at 20% 30%, rgb(197 160 89 / .10), transparent 45%),
+      radial-gradient(circle at 80% 70%, rgb(181 34 45 / .05), transparent 45%),
+      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.45 0 0 0 0 0.36 0 0 0 0 0.2 0 0 0 .06 0'/></filter><rect width='160' height='160' filter='url(%23n)'/></svg>");
+  }
+  h1, h2, h3 { @apply font-display; letter-spacing: -0.01em; }
+  :focus-visible { outline: 3px solid var(--color-pine); outline-offset: 3px; border-radius: 6px; }
+  ::selection { background: rgb(234 191 53 / .45); }
+  img { max-width: 100%; }
+}
+
+@utility container-mk { @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8; padding-left: max(1rem, env(safe-area-inset-left)); padding-right: max(1rem, env(safe-area-inset-right)); }
+@utility btn { @apply inline-flex items-center justify-center gap-2 rounded-full font-semibold transition-all duration-200 select-none disabled:cursor-not-allowed disabled:opacity-60; min-height: 44px; }
+@utility btn-primary { @apply btn bg-red text-white px-6 py-3 shadow-soft hover:bg-red-600 hover:shadow-lift active:translate-y-px; }
+@utility btn-pine { @apply btn bg-pine text-white px-5 py-2.5 hover:bg-pine-700; }
+@utility btn-ghost { @apply btn border border-line bg-paper text-graphite px-5 py-2.5 hover:border-gold hover:bg-cream-200; }
+@utility btn-danger { @apply btn border border-red/40 bg-paper text-red px-4 py-2 hover:bg-red hover:text-white; }
+@utility btn-sm { min-height: 36px; @apply px-3 py-1.5 text-sm; }
+@utility field { @apply block w-full rounded-xl border border-line bg-paper px-3.5 py-2.5 text-base text-graphite placeholder:text-muted/70 transition focus:border-pine focus:outline-none focus:ring-2 focus:ring-pine/25; min-height: 44px; }
+@utility label { @apply mb-1.5 block text-sm font-semibold text-graphite; }
+@utility card-surface { @apply rounded-[var(--radius-card)] border border-line bg-paper shadow-soft; }
+@utility eyebrow { @apply text-xs font-bold uppercase tracking-[0.18em] text-gold-ink; }
+@utility chip { @apply inline-flex items-center gap-1 rounded-full border border-line bg-cream px-2.5 py-1 text-xs font-medium text-graphite; }
+
+/* ---------- Luzes discretas (sem piscar: variação lenta de brilho) ---------- */
+@keyframes glow-soft { 0%, 100% { opacity: .55; } 50% { opacity: 1; } }
+.light-bulb { animation: glow-soft 4.5s ease-in-out infinite; }
+
+/* ---------- Entrada de cards ---------- */
+@keyframes rise-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+.rise-in { animation: rise-in .5s var(--ease-out-soft) both; }
+
+/* ---------- Selo "Apadrinhado" ---------- */
+@keyframes seal-in { 0% { opacity: 0; transform: scale(.6) rotate(-12deg); } 70% { opacity: 1; transform: scale(1.06) rotate(2deg); } 100% { transform: scale(1) rotate(0); } }
+.seal-in { animation: seal-in .6s var(--ease-spring) both; }
+
+/* ================================================================
+   Christmas Celebration — composição própria (caixa de presente)
+   Linha do tempo (≈3,2 s): enter → shake → open → reveal → fade → done
+   ================================================================ */
+.cc-root { position: relative; width: 100%; height: 220px; display: grid; place-items: center; overflow: hidden; }
+.cc-box { width: 168px; height: 168px; overflow: visible; transform-origin: 50% 85%; }
+.cc-root[data-stage="enter"] .cc-box { animation: cc-enter .7s var(--ease-spring) both; }
+.cc-root[data-stage="shake"] .cc-box { animation: cc-shake .45s ease-in-out both; }
+.cc-lid { transform-box: fill-box; transform-origin: 15% 100%; transition: transform .7s var(--ease-out-soft); }
+.cc-bow { transform-box: fill-box; transform-origin: 50% 100%; transition: transform .45s var(--ease-out-soft), opacity .45s; }
+.cc-root[data-stage="shake"] .cc-bow { transform: rotate(-8deg) scale(1.06); }
+.cc-root:is([data-stage="open"], [data-stage="reveal"], [data-stage="fade"], [data-stage="done"]) .cc-lid { transform: translate(-40px, -14px) rotate(-50deg); }
+.cc-root:is([data-stage="open"], [data-stage="reveal"], [data-stage="fade"], [data-stage="done"]) .cc-bow { transform: translateY(-4px) rotate(-6deg); }
+.cc-glow { opacity: 0; transform-box: fill-box; transform-origin: 50% 100%; transition: opacity .6s, transform .9s var(--ease-out-soft); transform: scale(.4); }
+.cc-root:is([data-stage="open"], [data-stage="reveal"]) .cc-glow { opacity: .95; transform: scale(1.15); }
+.cc-root:is([data-stage="fade"], [data-stage="done"]) .cc-glow { opacity: .45; transform: scale(1); }
+.cc-check { opacity: 0; transform-box: fill-box; transform-origin: center; transform: scale(.2) translateY(18px); transition: opacity .35s, transform .55s var(--ease-spring); }
+.cc-root:is([data-stage="reveal"], [data-stage="fade"], [data-stage="done"]) .cc-check { opacity: 1; transform: scale(1) translateY(0); }
+.cc-check path { stroke-dasharray: 60; stroke-dashoffset: 60; transition: stroke-dashoffset .5s .2s ease-out; }
+.cc-root:is([data-stage="reveal"], [data-stage="fade"], [data-stage="done"]) .cc-check path { stroke-dashoffset: 0; }
+.cc-particles { position: absolute; left: 50%; top: 52%; width: 0; height: 0; pointer-events: none; }
+.cc-particle { position: absolute; left: 0; top: 0; opacity: 0; will-change: transform, opacity;
+  animation: cc-burst var(--d, 1.6s) var(--ease-out-soft) var(--delay, 0s) both; }
+.cc-root[data-stage="fade"] .cc-particles { transition: opacity .6s; opacity: 0; }
+@keyframes cc-enter { 0% { opacity: 0; transform: scale(.55) translateY(18px); } 100% { opacity: 1; transform: none; } }
+@keyframes cc-shake { 0%, 100% { transform: rotate(0); } 25% { transform: rotate(-3deg); } 50% { transform: rotate(2.5deg) scale(1.02); } 75% { transform: rotate(-1.5deg); } }
+@keyframes cc-burst {
+  0% { opacity: 0; transform: translate(-50%, -50%) scale(.3) rotate(0); }
+  12% { opacity: 1; }
+  70% { opacity: 1; }
+  100% { opacity: 0; transform: translate(calc(-50% + var(--tx)), calc(-50% + var(--ty))) scale(var(--s, 1)) rotate(var(--r, 0deg)); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .light-bulb, .rise-in, .seal-in { animation: none !important; }
+  .cc-root * { animation: none !important; transition: none !important; }
+}
+
+/* ---------- Diálogos ---------- */
+dialog.mk-dialog { margin: auto; padding: 0; border: 0; background: transparent; max-width: min(36rem, calc(100vw - 1.5rem)); width: 100%; max-height: calc(100dvh - 1.5rem); color: inherit; }
+dialog.mk-dialog::backdrop { background: rgb(36 20 20 / .55); backdrop-filter: blur(3px); }
+@keyframes dialog-in { from { opacity: 0; transform: translateY(14px) scale(.98); } to { opacity: 1; transform: none; } }
+dialog.mk-dialog[open] > .dialog-panel { animation: dialog-in .28s var(--ease-out-soft); }
+@media (prefers-reduced-motion: reduce) { dialog.mk-dialog[open] > .dialog-panel { animation: none; } }
+
+@media print {
+  body { background: #fff !important; }
+  .no-print { display: none !important; }
+}
+
+/* ================================================================
+   Ambientação natalina
+   ================================================================ */
+/* Veludo bordô com brilho central e estrelas douradas discretas */
+.bg-velvet {
+  background-color: var(--color-burgundy-900);
+  background-image:
+    radial-gradient(1.4px 1.4px at 12% 22%, rgb(234 191 53 / .55), transparent 60%),
+    radial-gradient(1px 1px at 78% 14%, rgb(255 248 236 / .55), transparent 60%),
+    radial-gradient(1.2px 1.2px at 62% 68%, rgb(234 191 53 / .45), transparent 60%),
+    radial-gradient(1px 1px at 30% 80%, rgb(255 248 236 / .45), transparent 60%),
+    radial-gradient(1.3px 1.3px at 90% 52%, rgb(234 191 53 / .5), transparent 60%),
+    radial-gradient(ellipse 70% 60% at 30% 35%, #8E1B24 0%, transparent 70%),
+    radial-gradient(ellipse 60% 70% at 85% 60%, #5E1A21 0%, transparent 70%),
+    linear-gradient(180deg, #4A161B 0%, #6B1D24 55%, #3E1418 100%);
+}
+/* Noite de pinheiros: verde profundo com textura de flocos */
+.bg-pine-night {
+  background-color: var(--color-pine-900);
+  background-image:
+    radial-gradient(circle at 1px 1px, rgb(255 248 236 / .07) 1px, transparent 1.6px),
+    radial-gradient(ellipse 80% 50% at 50% 0%, #2E6A4C 0%, transparent 70%),
+    linear-gradient(180deg, #183B2B 0%, #0F2A1E 100%);
+  background-size: 26px 26px, auto, auto;
+}
+/* Papel creme com grão leve */
+.bg-paper-grain {
+  background-color: var(--color-cream);
+  background-image:
+    radial-gradient(circle at 20% 30%, rgb(197 160 89 / .10), transparent 45%),
+    radial-gradient(circle at 80% 70%, rgb(181 34 45 / .06), transparent 45%),
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.45 0 0 0 0 0.36 0 0 0 0 0.2 0 0 0 .06 0'/></filter><rect width='160' height='160' filter='url(%23n)'/></svg>");
+}
+.text-script { font-family: var(--font-script); font-weight: 400; letter-spacing: 0; }
+.gold-text {
+  background: linear-gradient(180deg, #FFE7A3 0%, #EABF35 45%, #C5A059 100%);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.gold-frame { box-shadow: inset 0 0 0 1px rgb(197 160 89 / .55), inset 0 0 0 5px var(--color-paper), inset 0 0 0 6px rgb(197 160 89 / .35); }
+
+@keyframes ornament-swing { 0%, 100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg); } }
+.ornament-swing { transform-origin: 50% 0; animation: ornament-swing 6s ease-in-out infinite; }
+
+@keyframes twinkle { 0%, 100% { opacity: .35; transform: scale(.85); } 50% { opacity: 1; transform: scale(1.1); } }
+.twinkle { animation: twinkle 3.6s ease-in-out infinite; }
+
+@keyframes float-up { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+.hero-enter > * { animation: float-up .8s var(--ease-out-soft) both; }
+.hero-enter > *:nth-child(2) { animation-delay: .08s; }
+.hero-enter > *:nth-child(3) { animation-delay: .16s; }
+.hero-enter > *:nth-child(4) { animation-delay: .24s; }
+.hero-enter > *:nth-child(5) { animation-delay: .32s; }
+.hero-enter > *:nth-child(6) { animation-delay: .4s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .ornament-swing, .twinkle, .hero-enter > * { animation: none !important; }
+}
