@@ -29,3 +29,10 @@ Acesso: link discreto "Área da equipe" no rodapé ou `/admin`. Cada pessoa usa 
 - Nunca compartilhar planilhas exportadas em grupos públicos; apagar arquivos locais após o uso.
 - Não publicar participantes sem autorização registrada.
 - Pedidos de remoção: despublicar/arquivar o participante e registrar o motivo nas observações.
+
+## Importar planilha + fotos de uma vez
+1. **Importação** › escolha a campanha › selecione a planilha (.xlsx baixada do Google Planilhas).
+2. Deixe marcado **"Importar somente as respostas de 2026"** (o formulário foi reaproveitado e contém respostas de 2025).
+3. Em **Fotos**, selecione o **.zip** baixado da pasta de fotos do Google Drive (ou as fotos soltas). O sistema liga cada foto à pessoa pelo nome no arquivo e mostra "foto ok" / "sem foto" na pré-visualização.
+4. Se a organização tem a autorização das pessoas, marque **"Estas pessoas autorizaram…"**.
+5. **Confirmar importação**. Depois, em **Participantes**, clique em **"Publicar todos os autorizados"**.

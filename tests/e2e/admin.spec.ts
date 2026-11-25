@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { readFileSync } from 'node:fs';
+import { zipSync } from 'fflate';
 import { freshDemo, login } from './helpers';
 
 test.beforeEach(async ({ page }) => { await freshDemo(page, 0); });
@@ -70,7 +71,7 @@ test('importação CSV com mapeamento, duplicidades, alerta de ano e registros n
   await expect(page.getByTestId('import-confirm')).toBeDisabled();
   await page.getByRole('checkbox', { name: /pertencem à campanha 2026/ }).check();
   await page.getByTestId('import-confirm').click();
-  await expect(page.getByText(/2 participante\(s\) importado\(s\) como NÃO publicados/)).toBeVisible();
+  await expect(page.getByText(/2 participante\(s\) importado\(s\) em .*NÃO aparecem no site/)).toBeVisible();
   await page.getByRole('link', { name: 'Participantes' }).click();
   await page.getByLabel('Situação').selectOption('draft');
   await expect(page.getByTestId('admin-participant-row').filter({ hasText: 'Teste Sintético Um' })).toHaveCount(1);
@@ -98,4 +99,29 @@ test('campanha 2025 permanece isolada como histórico', async ({ page }) => {
   await expect(page.getByTestId('dash-Total de participantes')).toHaveText('6');
   await page.goto('/');
   await expect(page.getByTestId('participant-card')).toHaveCount(20);
+});
+
+test('importação com filtro de ano, fotos em .zip, autorização e publicação em lote', async ({ page }) => {
+  await login(page, 'admin@demo.mk', 'demo-admin');
+  const png = await page.screenshot({ clip: { x: 0, y: 0, width: 120, height: 150 } });
+  const zip = zipSync({ 'Fotos (File responses)/IMG_1 - Foto Sintética Alfa.png': new Uint8Array(png), 'Fotos (File responses)/IMG_2 - Foto Sintética Beta.png': new Uint8Array(png) });
+  await page.getByRole('link', { name: 'Importação' }).click();
+  await page.getByTestId('import-target').selectOption('2026');
+  const csv = 'Carimbo de data/hora,Nome e Sobrenome,Você é:,Idade\n03/11/2025 10:00:00,Resposta Antiga,Aluno,9\n20/11/2026 10:00:00,Foto Sintética Alfa,Aluno,10\n20/11/2026 11:00:00,Foto Sintética Beta,Voluntário,30\n21/11/2026 11:00:00,Sem Foto Gama,Aluno,12\n';
+  await page.getByTestId('import-file').setInputFiles({ name: 'respostas.csv', mimeType: 'text/csv', buffer: Buffer.from(csv) });
+  await expect(page.getByText(/1 resposta\(s\) de outros anos serão ignoradas/)).toBeVisible();
+  await expect(page.getByText('Atenção: possível campanha diferente')).toHaveCount(0);
+  await page.getByTestId('import-photos').setInputFiles({ name: 'fotos.zip', mimeType: 'application/zip', buffer: Buffer.from(zip) });
+  await expect(page.getByTestId('photo-match-count')).toHaveText('2 de 3 pessoas com foto encontrada.');
+  await page.getByTestId('import-authorized').check();
+  await page.getByTestId('import-confirm').click();
+  await expect(page.getByText(/3 participante\(s\) importado\(s\) em .*, 2 com foto/)).toBeVisible();
+  await page.getByRole('link', { name: 'Participantes' }).click();
+  await page.getByTestId('publish-all').click();
+  await expect(page.getByText(/participante\(s\) publicado\(s\)/)).toBeVisible();
+  await page.goto('/');
+  const card = page.locator('article', { hasText: 'Foto A.' });
+  await expect(card.first()).toBeVisible();
+  await expect(card.first().locator('img')).toHaveAttribute('src', /^data:image\//);
+  await expect(page.getByText('Resposta A.')).toHaveCount(0);
 });

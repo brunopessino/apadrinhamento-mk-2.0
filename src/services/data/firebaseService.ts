@@ -270,7 +270,8 @@ export function createFirebaseService(): DataService {
       const camp = await getDoc(C.campaign(cid));
       if (!camp.exists()) throw new Error('Campanha de destino inexistente.');
       const jobRef = doc(sub(cid, 'importJobs'));
-      const CHUNK = 200;
+      // fotos inline (~20–90 KB cada): lotes menores para respeitar o limite de 10 MB por gravação
+      const CHUNK = records.some((r) => r.photoData) ? 25 : 200;
       for (let i = 0; i < records.length; i += CHUNK) {
         const batch = writeBatch(db);
         for (const r of records.slice(i, i + CHUNK)) {

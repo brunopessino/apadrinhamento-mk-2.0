@@ -1,5 +1,5 @@
 import { createDemoService, DEMO_USERS } from './data/demoService';
-import { autoMap, buildRecords, parseCsvText, yearMismatch } from './importer';
+import { autoMap, buildRecords, matchPhotos, parseCsvText, yearMismatch } from './importer';
 import { buildReport, toCsv } from './exporter';
 import type { StaffUser } from '@/types';
 
@@ -142,5 +142,28 @@ describe('relatórios', () => {
     expect(csv).toContain('Gerado em:');
     expect(csv).toContain(`'=cmd|calc`);
     expect(csv).not.toMatch(/;=cmd/);
+  });
+});
+
+describe('importação — filtro por ano e fotos em lote', () => {
+  it('importa somente as respostas do ano da campanha', async () => {
+    const csv = 'Carimbo de data/hora,Nome e Sobrenome,Você é:\n03/11/2025 08:35:05,Pessoa Antiga,Aluno\n20/11/2026 10:00:00,Pessoa Nova,Aluno\n21/11/2026 10:00:00,Outra Pessoa,Voluntário\n';
+    const sheet = await parseCsvText(csv);
+    const r = buildRecords(sheet, autoMap(sheet.headers), new Set(), { onlyYear: 2026 });
+    expect(r.records.map((x) => x.fullName)).toEqual(['Pessoa Nova', 'Outra Pessoa']);
+    expect(r.otherYear).toBe(1);
+    expect(r.yearsFound).toEqual([2025, 2026]);
+  });
+
+  it('associa fotos pelo nome (inclusive padrão do Google Forms) e não chuta em caso de dúvida', () => {
+    const recs = [{ fullName: 'Maria Clara Souza' }, { fullName: 'João da Silva' }, { fullName: 'Ana Lima' }, { fullName: 'Ana Lima Costa' }, { fullName: 'Sem Foto' }];
+    const files = ['IMG_1234 - Maria Clara Souza.jpg', 'joao silva.PNG', 'fotos/Ana Lima.webp', 'outra.jpg'];
+    const m = matchPhotos(recs, files);
+    expect(m.get(0)).toBe(0);
+    expect(m.get(1)).toBe(1);
+    // "Ana Lima.webp" serve tanto para "Ana Lima" quanto para "Ana Lima Costa": ambíguo, não associa nenhum dos dois
+    expect(m.has(2)).toBe(false);
+    expect(m.has(3)).toBe(false);
+    expect(m.has(4)).toBe(false);
   });
 });

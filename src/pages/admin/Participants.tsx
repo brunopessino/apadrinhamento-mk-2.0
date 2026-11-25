@@ -132,11 +132,17 @@ export default function Participants() {
     .filter((p) => !q || norm(`${p.fullName} ${p.displayName} ${p.group}`).includes(norm(q)))
     .sort((a, b) => a.fullName.localeCompare(b.fullName, 'pt-BR')), [participants, status, cat, q]);
   const isAdmin = can.publishParticipants(actor.role);
+  const pending = participants.filter((p) => !p.archived && !p.published && p.publicationAuthorized);
+  const publishAll = () => run(async () => {
+    for (const p of pending) await service.admin.setPublished(campaignId!, p.id, true, actor);
+  }, `${pending.length} participante(s) publicado(s).`);
 
   return (
     <>
       <PageHead title="Participantes" desc="Cadastros privados da campanha. Somente participantes com autorização de exposição podem ser publicados no catálogo."
-        actions={<button className="btn-primary" onClick={() => setEditing(blank())}><Plus className="h-4 w-4" aria-hidden="true" />Cadastrar</button>} />
+        actions={<div className="flex flex-wrap gap-2">
+          {isAdmin && pending.length > 0 && <button className="btn-pine" disabled={busy} onClick={publishAll} data-testid="publish-all"><Eye className="h-4 w-4" aria-hidden="true" />Publicar todos os autorizados ({pending.length})</button>}
+          <button className="btn-primary" onClick={() => setEditing(blank())}><Plus className="h-4 w-4" aria-hidden="true" />Cadastrar</button></div>} />
       <div className="mb-4 grid gap-3 sm:grid-cols-[1fr_auto_auto]">
         <label className="relative"><span className="sr-only">Pesquisar</span><Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" aria-hidden="true" /><input className="field pl-9" placeholder="Pesquisar por nome ou turma" value={q} onChange={(e) => setQ(e.target.value)} /></label>
         <label><span className="sr-only">Situação</span><select className="field" value={status} onChange={(e) => setStatus(e.target.value)}><option value="active">Ativos</option><option value="published">Publicados</option><option value="draft">Não publicados</option><option value="archived">Arquivados</option></select></label>

@@ -91,7 +91,10 @@ export interface BuildResult {
   issues: RowIssue[];
   duplicates: Duplicate[];
   yearsFound: number[];
+  /** linhas ignoradas por pertencerem a outro ano (quando onlyYear é usado) */
+  otherYear: number;
 }
+export interface BuildOptions { onlyYear?: number }
 
 /** Interpreta "dd/mm/aaaa hh:mm:ss" (Forms pt-BR) ou ISO. Retorna ISO ou ''. */
 export function parseTimestamp(raw: string): string {
@@ -107,14 +110,17 @@ export function parseTimestamp(raw: string): string {
   return Number.isNaN(dt.getTime()) ? '' : dt.toISOString();
 }
 
-export function buildRecords(sheet: ParsedSheet, map: Mapping, existingKeys: Set<string>): BuildResult {
-  const out: BuildResult = { records: [], issues: [], duplicates: [], yearsFound: [] };
+export function buildRecords(sheet: ParsedSheet, map: Mapping, existingKeys: Set<string>, opts: BuildOptions = {}): BuildResult {
+  const out: BuildResult = { records: [], issues: [], duplicates: [], yearsFound: [], otherYear: 0 };
   const seen = new Set<string>();
   const years = new Set<number>();
   sheet.rows.forEach((row, i) => {
     const rowNo = i + 2; // linha 1 = cabeçalho
     const get = (k: FieldKey) => (map[k] ? String(row[map[k]!] ?? '').trim() : '');
-    const fullName = get('fullName').replace(/\s+/g, ' ');
+    const fullName = get('fullName').replace(/\s+/g, ' ').trim();
+    const ts = parseTimestamp(get('timestamp'));
+    if (ts) years.add(new Date(ts).getUTCFullYear());
+    if (opts.onlyYear && ts && yearInBrazil(ts) !== opts.onlyYear) { out.otherYear++; return; }
     if (!fullName) { out.issues.push({ row: rowNo, message: 'Nome ausente — linha ignorada.' }); return; }
     if (fullName.length > 120) { out.issues.push({ row: rowNo, message: 'Nome muito longo — linha ignorada.' }); return; }
     const category = normalizeCategory(get('category'));
@@ -123,8 +129,7 @@ export function buildRecords(sheet: ParsedSheet, map: Mapping, existingKeys: Set
     const age = parseAge(ageRaw);
     if (ageRaw && age === null) out.issues.push({ row: rowNo, message: `Idade "${ageRaw}" não reconhecida para "${fullName}" (importado sem idade).` });
     const group = get('group');
-    const ts = parseTimestamp(get('timestamp'));
-    if (ts) years.add(new Date(ts).getUTCFullYear());
+    if (opts.onlyYear && !ts) out.issues.push({ row: rowNo, message: `"${fullName}" não tem data de resposta (linha incluída à mão?) — importado; confira se é de ${opts.onlyYear}.` });
     const key = dedupeKeyOf(fullName, age, group);
     if (seen.has(key)) { out.duplicates.push({ row: rowNo, name: fullName, reason: 'arquivo' }); return; }
     if (existingKeys.has(key)) { out.duplicates.push({ row: rowNo, name: fullName, reason: 'campanha' }); seen.add(key); return; }
@@ -147,4 +152,64 @@ export function yearMismatch(fileName: string, yearsFound: number[], targetYear:
   const other = yearsFound.filter((y) => y !== targetYear);
   if (other.length) return `As respostas têm data de ${yearsFound.join(', ')}, diferente da campanha de destino (${targetYear}).`;
   return null;
+}
+
+/** Ano da resposta no horário de Brasília (UTC-3). */
+export function yearInBrazil(iso: string): number {
+  return new Date(new Date(iso).getTime() - 3 * 3600_000).getUTCFullYear();
+}
+
+/* ------------------------------------------------------------------ */
+/* Fotos em lote: casa cada arquivo com a pessoa pelo nome no arquivo   */
+/* ------------------------------------------------------------------ */
+const STOP = new Set(['de', 'da', 'do', 'das', 'dos', 'e']);
+const tokens = (s: string) => norm(s).replace(/[^a-z0-9 ]/g, ' ').split(' ').filter((t) => t.length > 1 && !STOP.has(t));
+const IMG_EXT = /\.(jpe?g|png|webp|heic|heif)$/i;
+export const isImageName = (n: string) => IMG_EXT.test(n);
+
+/**
+ * Para cada registro, encontra o arquivo cujo nome contém o nome da pessoa.
+ * Aceita "Nome Sobrenome.jpg" e o padrão do Google Forms "IMG_123 - Nome Sobrenome.jpg".
+ * Só associa quando a correspondência é única (nunca chuta).
+ */
+export function matchPhotos<R extends { fullName: string }>(records: R[], fileNames: string[]): Map<number, number> {
+  const files = fileNames.map((n) => {
+    const base = (n.split('/').pop() ?? n).replace(IMG_EXT, '');
+    const named = base.includes(' - ') ? base.slice(base.lastIndexOf(' - ') + 3) : base;
+    return { all: new Set(tokens(base)), named: tokens(named) };
+  });
+  const score = (r: R, fi: number) => {
+    const rt = tokens(r.fullName);
+    if (rt.length === 0) return 0;
+    const f = files[fi];
+    if (rt.every((t) => f.all.has(t))) return 3; // nome completo presente
+    if (f.named.length >= 2 && f.named.every((t) => rt.includes(t))) return 2; // arquivo tem parte do nome (ex.: nome + último sobrenome)
+    return 0;
+  };
+  const out = new Map<number, number>();
+  const usedBy = new Map<number, number[]>();
+  records.forEach((r, ri) => {
+    let best = 0; let hits: number[] = [];
+    files.forEach((_, fi) => { const s = score(r, fi); if (s > best) { best = s; hits = [fi]; } else if (s === best && s > 0) hits.push(fi); });
+    if (best > 0 && hits.length === 1) { out.set(ri, hits[0]); usedBy.set(hits[0], [...(usedBy.get(hits[0]) ?? []), ri]); }
+  });
+  // um arquivo associado a mais de uma pessoa é ambíguo: desfaz
+  for (const [, ris] of usedBy) if (ris.length > 1) ris.forEach((ri) => out.delete(ri));
+  return out;
+}
+
+const MIME: Record<string, string> = { jpg: 'image/jpeg', jpeg: 'image/jpeg', png: 'image/png', webp: 'image/webp', heic: 'image/heic', heif: 'image/heif' };
+export const mimeOf = (n: string) => MIME[n.split('.').pop()?.toLowerCase() ?? ''] ?? '';
+
+/** Lê fotos soltas e/ou arquivos .zip (ex.: download da pasta do Google Drive). */
+export async function collectPhotoFiles(list: File[]): Promise<File[]> {
+  const out: File[] = [];
+  for (const f of list) {
+    if (f.name.toLowerCase().endsWith('.zip')) {
+      const { unzipSync } = await import('fflate');
+      const entries = unzipSync(new Uint8Array(await f.arrayBuffer()), { filter: (e) => isImageName(e.name) && !e.name.startsWith('__MACOSX') });
+      for (const [name, data] of Object.entries(entries)) out.push(new File([data as BlobPart], name.split('/').pop() ?? name, { type: mimeOf(name) }));
+    } else if (isImageName(f.name)) out.push(f.type ? f : new File([f], f.name, { type: mimeOf(f.name) }));
+  }
+  return out;
 }
