@@ -83,3 +83,15 @@ describe('filtros e indicadores', () => {
     expect(computeStats([])).toEqual({ total: 0, sponsored: 0, available: 0, percent: 0 });
   });
 });
+
+import { standardizeName } from './text';
+describe('padronização de nomes', () => {
+  it('iniciais maiúsculas, partículas minúsculas, sem ponto final', () => {
+    expect(standardizeName('DAIANE SANTOS')).toBe('Daiane Santos');
+    expect(standardizeName('Kamilly  vitória ')).toBe('Kamilly Vitória');
+    expect(standardizeName('Guilherme França da Costa Valério de Souza.')).toBe('Guilherme França da Costa Valério de Souza');
+    expect(standardizeName("Aghata D'Eleutério Borges")).toBe("Aghata D'Eleutério Borges");
+    expect(standardizeName('Kayo de Farias lemos de Oliveira')).toBe('Kayo de Farias Lemos de Oliveira');
+    expect(standardizeName('Íris')).toBe('Íris');
+  });
+});

@@ -3,7 +3,7 @@
  * Nunca inventa dados: cada registro corresponde a uma linha real do arquivo.
  */
 import type { ImportRecord } from '@/types';
-import { dedupeKeyOf, displayNameFrom, norm, normalizeCategory, parseAge } from '@/lib/text';
+import { dedupeKeyOf, displayNameFrom, norm, normalizeCategory, parseAge, standardizeName } from '@/lib/text';
 
 export type FieldKey = 'timestamp' | 'fullName' | 'category' | 'age' | 'group' | 'clothingSize' | 'shoeSize' | 'photo' | 'gift';
 
@@ -117,7 +117,7 @@ export function buildRecords(sheet: ParsedSheet, map: Mapping, existingKeys: Set
   sheet.rows.forEach((row, i) => {
     const rowNo = i + 2; // linha 1 = cabeçalho
     const get = (k: FieldKey) => (map[k] ? String(row[map[k]!] ?? '').trim() : '');
-    const fullName = get('fullName').replace(/\s+/g, ' ').trim();
+    const fullName = standardizeName(get('fullName'));
     const ts = parseTimestamp(get('timestamp'));
     if (ts) years.add(new Date(ts).getUTCFullYear());
     if (opts.onlyYear && ts && yearInBrazil(ts) !== opts.onlyYear) { out.otherYear++; return; }

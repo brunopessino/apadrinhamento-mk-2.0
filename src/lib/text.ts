@@ -1,6 +1,14 @@
 export const stripAccents = (s: string) => s.normalize('NFD').replace(/[̀-ͯ]/g, '');
 export const norm = (s: string) => stripAccents(s).toLowerCase().replace(/\s+/g, ' ').trim();
 
+const PARTICLES = new Set(['de', 'da', 'do', 'das', 'dos', 'e', 'di', 'du']);
+const capWord = (w: string) => w.split(/([-'’])/).map((seg) => (/^[-'’]$/.test(seg) || !seg ? seg : seg.charAt(0).toLocaleUpperCase('pt-BR') + seg.slice(1).toLocaleLowerCase('pt-BR'))).join('');
+/** Padroniza nome: iniciais maiúsculas, partículas (de, da, dos…) minúsculas, sem pontuação nas pontas. */
+export function standardizeName(raw: string): string {
+  const words = raw.replace(/\s+/g, ' ').trim().replace(/^[.,;:\s]+|[.,;:\s]+$/g, '').split(' ').filter(Boolean);
+  return words.map((w, i) => (i > 0 && PARTICLES.has(w.toLocaleLowerCase('pt-BR')) ? w.toLocaleLowerCase('pt-BR') : capWord(w))).join(' ');
+}
+
 /** Nome público padrão: primeiro nome + inicial do último sobrenome (minimização de dados). */
 export function displayNameFrom(fullName: string): string {
   const parts = fullName.trim().replace(/\s+/g, ' ').split(' ').filter(Boolean);
