@@ -201,6 +201,15 @@ export function matchPhotos<R extends { fullName: string }>(records: R[], fileNa
 const MIME: Record<string, string> = { jpg: 'image/jpeg', jpeg: 'image/jpeg', png: 'image/png', webp: 'image/webp', heic: 'image/heic', heif: 'image/heif' };
 export const mimeOf = (n: string) => MIME[n.split('.').pop()?.toLowerCase() ?? ''] ?? '';
 
+/** Corrige nomes de arquivo vindos de .zip: UTF-8 lido como Latin-1 e escapes do Google Drive ("#U00ed" = "í"). */
+export function fixZipName(name: string): string {
+  let out = name;
+  if (/[\u00c2-\u00f4][\u0080-\u00bf]/.test(out)) {
+    try { out = new TextDecoder('utf-8', { fatal: true }).decode(Uint8Array.from(out, (c) => c.charCodeAt(0) & 0xff)); } catch { /* mantém */ }
+  }
+  return out.replace(/#U([0-9a-f]{4})/gi, (_, h: string) => String.fromCharCode(parseInt(h, 16)));
+}
+
 /** Lê fotos soltas e/ou arquivos .zip (ex.: download da pasta do Google Drive). */
 export async function collectPhotoFiles(list: File[]): Promise<File[]> {
   const out: File[] = [];
@@ -208,7 +217,7 @@ export async function collectPhotoFiles(list: File[]): Promise<File[]> {
     if (f.name.toLowerCase().endsWith('.zip')) {
       const { unzipSync } = await import('fflate');
       const entries = unzipSync(new Uint8Array(await f.arrayBuffer()), { filter: (e) => isImageName(e.name) && !e.name.startsWith('__MACOSX') });
-      for (const [name, data] of Object.entries(entries)) out.push(new File([data as BlobPart], name.split('/').pop() ?? name, { type: mimeOf(name) }));
+      for (const [raw, data] of Object.entries(entries)) { const name = fixZipName(raw); out.push(new File([data as BlobPart], name.split('/').pop() ?? name, { type: mimeOf(name) })); }
     } else if (isImageName(f.name)) out.push(f.type ? f : new File([f], f.name, { type: mimeOf(f.name) }));
   }
   return out;

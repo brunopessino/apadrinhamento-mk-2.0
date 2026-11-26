@@ -1,5 +1,5 @@
 import { createDemoService, DEMO_USERS } from './data/demoService';
-import { autoMap, buildRecords, matchPhotos, parseCsvText, yearMismatch } from './importer';
+import { autoMap, buildRecords, fixZipName, matchPhotos, parseCsvText, yearMismatch } from './importer';
 import { buildReport, toCsv } from './exporter';
 import type { StaffUser } from '@/types';
 
@@ -165,5 +165,14 @@ describe('importação — filtro por ano e fotos em lote', () => {
     expect(m.has(2)).toBe(false);
     expect(m.has(3)).toBe(false);
     expect(m.has(4)).toBe(false);
+  });
+});
+
+describe('nomes de arquivos em .zip', () => {
+  it('corrige UTF-8 lido como Latin-1 e escapes do Google Drive', () => {
+    const latin1 = String.fromCharCode(...new TextEncoder().encode('Íris.jpg'));
+    expect(fixZipName(latin1)).toBe('Íris.jpg');
+    expect(fixZipName('Daniel - Fam#U00edlia RenneFernandes.jpeg')).toBe('Daniel - Família RenneFernandes.jpeg');
+    expect(fixZipName('Kamilly Vitória.jpg')).toBe('Kamilly Vitória.jpg');
   });
 });
