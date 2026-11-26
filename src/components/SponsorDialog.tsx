@@ -84,7 +84,7 @@ export function SponsorDialog({ participant, live, campaign, onClose, onConfirme
       {phase.kind === 'success' ? (
         <div data-testid="sponsor-success" className="text-center">
           <CelebrationBoundary fallback={<div className="cc-root" data-testid="celebration" data-mode="fallback" aria-hidden="true"><GiftBoxArt open /></div>}>
-            <ChristmasCelebration playKey={phase.protocol} />
+            <ChristmasCelebration playKey={phase.protocol} name={phase.name} />
           </CelebrationBoundary>
           <div role="status" aria-live="assertive">
             <h2 className="mt-1 text-3xl font-semibold text-burgundy">{CAMPAIGN_TEXTS.confirmedTitle}</h2>

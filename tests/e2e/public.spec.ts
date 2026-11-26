@@ -79,7 +79,7 @@ test('fluxo completo: confirmação, animação natalina, protocolo e atualizaç
   await expect(page.getByTestId('protocol')).toHaveText(/^MK26-[A-Z2-9]{8}$/);
   await expect(cel).toHaveAttribute('data-stage', 'open', { timeout: 3000 });
   expect(await cel.locator('.cc-particle').count()).toBeGreaterThan(0);
-  await expect(cel).toHaveAttribute('data-stage', 'done', { timeout: 5000 });
+  await expect(cel).toHaveAttribute('data-stage', 'done', { timeout: 8000 });
   expect(await cel.locator('.cc-particle').count()).toBe(0);
   await page.getByRole('button', { name: 'Voltar ao catálogo' }).click();
   const updated = page.getByTestId('participant-card').filter({ has: page.locator('h3', { hasText: name! }) });

@@ -11,17 +11,18 @@
 import { Component, useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { GiftBoxArt, MusicNote, Snowflake, Sparkle, Star } from './decor/Decor';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
+import { CelebrationShow } from './CelebrationShow';
 
 export type CelebrationStage = 'enter' | 'shake' | 'open' | 'reveal' | 'fade' | 'done';
 
-/** Linha do tempo em ms (≈3,2 s no total). */
+/** Linha do tempo em ms (≈5,6 s no total, com espetáculo em tela cheia). */
 export const TIMELINE: [CelebrationStage, number][] = [
   ['enter', 0],
-  ['shake', 650],
-  ['open', 1100],
-  ['reveal', 1850],
-  ['fade', 2600],
-  ['done', 3200],
+  ['shake', 450],
+  ['open', 1000],
+  ['reveal', 1500],
+  ['fade', 4800],
+  ['done', 5500],
 ];
 
 const played = new Set<string>();
@@ -68,12 +69,14 @@ function ParticleShape({ p }: { p: Particle }) {
 export interface ChristmasCelebrationProps {
   /** Chave única da confirmação (protocolo) — evita execução duplicada. */
   playKey: string;
+  /** nome exibido no espetáculo ("Maria S. vai ter um Natal…") */
+  name?: string;
   onDone?: () => void;
   /** força modo (testes) */
   forceReducedMotion?: boolean;
 }
 
-export function ChristmasCelebration({ playKey, onDone, forceReducedMotion }: ChristmasCelebrationProps) {
+export function ChristmasCelebration({ playKey, name, onDone, forceReducedMotion }: ChristmasCelebrationProps) {
   const systemReduced = useReducedMotion();
   const reduced = forceReducedMotion ?? systemReduced;
   // Decidido uma única vez por montagem: evita reexecução e chamadas duplicadas.
@@ -113,11 +116,7 @@ export function ChristmasCelebration({ playKey, onDone, forceReducedMotion }: Ch
           </div>
         )}
       </div>
-      {animated && stage !== 'done' && (
-        <button type="button" onClick={finish} className="absolute right-0 top-0 rounded-full bg-paper/80 px-3 py-1.5 text-xs font-semibold text-muted underline-offset-2 hover:underline">
-          Pular animação
-        </button>
-      )}
+      {animated && stage !== 'done' && <CelebrationShow stage={stage} name={name} onSkip={finish} />}
     </div>
   );
 }

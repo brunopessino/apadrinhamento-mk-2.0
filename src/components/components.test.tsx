@@ -64,7 +64,7 @@ describe('ChristmasCelebration', () => {
     act(() => { vi.advanceTimersByTime(TIMELINE.find(([s]) => s === 'open')![1]); });
     expect(el).toHaveAttribute('data-stage', 'open');
     expect(el.querySelectorAll('.cc-particle').length).toBeGreaterThan(0);
-    act(() => { vi.advanceTimersByTime(4000); });
+    act(() => { vi.advanceTimersByTime(6000); });
     expect(el).toHaveAttribute('data-stage', 'done');
     expect(el.querySelectorAll('.cc-particle').length).toBe(0);
     expect(onDone).toHaveBeenCalledTimes(1);
