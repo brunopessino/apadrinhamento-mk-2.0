@@ -35,8 +35,8 @@ export function buildReport(key: ReportKey, d: ReportData, f: ReportFilters = {}
   const spBy = new Map(d.sponsorships.map((s) => [s.participantId, s]));
   let ps = d.participants.filter((p) => (f.includeArchived || !p.archived) && (!f.category || p.category === f.category) && (!f.group || p.group === f.group));
   ps = ps.sort((a, b) => a.fullName.localeCompare(b.fullName, 'pt-BR'));
-  const pRow = (p: PrivateParticipant) => [p.fullName, p.displayName, p.category, p.age ?? '', p.group, p.clothingSize, p.shoeSize, p.giftSuggestion, p.published ? 'Sim' : 'Não', spBy.has(p.id) ? 'Apadrinhado' : 'Disponível'];
-  const pHead = ['Nome completo', 'Nome de exibição', 'Categoria', 'Idade', 'Turma', 'Roupa', 'Calçado', 'Presente sugerido', 'Publicado', 'Situação'];
+  const pRow = (p: PrivateParticipant) => [p.fullName, p.displayName, p.category, p.age ?? '', p.group, p.clothingSize, p.shoeSize, p.published ? 'Sim' : 'Não', spBy.has(p.id) ? 'Apadrinhado' : 'Disponível'];
+  const pHead = ['Nome completo', 'Nome de exibição', 'Categoria', 'Idade', 'Turma', 'Roupa', 'Calçado', 'Publicado', 'Situação'];
   const spHead = ['Protocolo', 'Participante', 'Turma', 'Padrinho', 'WhatsApp', 'Status', 'Confirmado em', 'Observações'];
   const pById = new Map(d.participants.map((p) => [p.id, p]));
   const spRow = (s: Sponsorship) => [s.protocol, pById.get(s.participantId)?.fullName ?? s.participantDisplayName, pById.get(s.participantId)?.group ?? '', s.sponsorName, formatStoredPhone(s.sponsorPhone), STATUS[s.status] ?? s.status, dt(s.createdAt), s.adminNotes ?? ''];

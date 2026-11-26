@@ -55,7 +55,6 @@ function Editor({ initial, onClose }: { initial: ParticipantInput; onClose: () =
           <datalist id="grp-list">{groups.map((c) => <option key={c} value={c} />)}</datalist></label>
         <label><span className="label">Tamanho de roupa</span><input className="field" maxLength={40} value={p.clothingSize} onChange={(e) => set({ clothingSize: e.target.value })} /></label>
         <label><span className="label">Tamanho de calçado</span><input className="field" maxLength={40} value={p.shoeSize} onChange={(e) => set({ shoeSize: e.target.value })} /></label>
-        <label><span className="label">Presente sugerido (opcional)</span><input className="field" maxLength={200} value={p.giftSuggestion} onChange={(e) => set({ giftSuggestion: e.target.value })} /></label>
         <label className="sm:col-span-2"><span className="label">Observações internas</span><textarea className="field min-h-20" maxLength={1000} value={p.notes ?? ''} onChange={(e) => set({ notes: e.target.value })} /></label>
         <label className="flex items-start gap-3 sm:col-span-2">
           <input type="checkbox" className="mt-1 h-5 w-5 accent-pine" checked={p.publicationAuthorized} onChange={(e) => set({ publicationAuthorized: e.target.checked, ...(e.target.checked ? {} : { published: false }) })} />

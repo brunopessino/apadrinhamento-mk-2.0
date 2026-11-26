@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { Gift, HandHeart, Heart, Search, SlidersHorizontal, Sparkles, Users, WifiOff, RefreshCw, XCircle, Globe, Music } from 'lucide-react';
 import type { Campaign, PublicParticipant } from '@/types';
 import { useData } from '@/hooks/DataContext';
-import { CAMPAIGN_TEXTS, DEFAULT_PIX, FALLBACK_CATEGORIES, INSTITUTION, PIX_INTRO, pixKeyLine } from '@/config/campaign';
+import { CAMPAIGN_TEXTS, cleanInstitutional, DEFAULT_PIX, FALLBACK_CATEGORIES, INSTITUTION, PIX_INTRO, pixKeyLine } from '@/config/campaign';
 import { computeStats } from '@/lib/stats';
 import { AGE_BANDS, EMPTY_FILTERS, distinct, filterParticipants, hasActiveFilters, type CatalogFilters } from '@/lib/filters';
 import { ParticipantCard } from '@/components/ParticipantCard';
@@ -33,7 +33,7 @@ function Hero({ campaign }: { campaign: Campaign | null }) {
             {campaign?.heroMessage ?? CAMPAIGN_TEXTS.mainMessage}
           </p>
           <p className="mt-5 max-w-xl text-base leading-relaxed text-cream/85 sm:text-lg">
-            {campaign?.institutionalMessage ?? CAMPAIGN_TEXTS.institutionalMessage}
+            {cleanInstitutional(campaign?.institutionalMessage)}
           </p>
           <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:items-center">
             <a href="#catalogo" className="btn bg-gradient-to-b from-[#FFE08A] to-[#EABF35] px-8 py-3.5 text-base text-burgundy-900 shadow-[0_10px_30px_-8px_rgb(234_191_53/.7)] hover:brightness-105 active:translate-y-px">

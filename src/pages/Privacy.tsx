@@ -10,7 +10,7 @@ export default function Privacy() {
       <div className="mt-8 space-y-6 leading-relaxed text-graphite">
         <section><h2 className="text-2xl font-semibold text-pine">Quais dados coletamos</h2>
           <p className="mt-2"><strong>Padrinhos e madrinhas:</strong> nome e número de WhatsApp informados no formulário de apadrinhamento. Não pedimos CPF, endereço, dados bancários ou senhas.</p>
-          <p className="mt-2"><strong>Participantes da campanha:</strong> nome de exibição, categoria, idade, turma, tamanhos de roupa e calçado, presente sugerido e fotografia — publicados somente com autorização registrada pela organização. O nome completo fica restrito à equipe.</p>
+          <p className="mt-2"><strong>Participantes da campanha:</strong> nome de exibição, categoria, idade, turma, tamanhos de roupa e calçado e fotografia — publicados somente com autorização registrada pela organização. O nome completo fica restrito à equipe.</p>
         </section>
         <section><h2 className="text-2xl font-semibold text-pine">Para que usamos</h2>
           <p className="mt-2">Exclusivamente para organizar a campanha de Natal: registrar o apadrinhamento, entrar em contato individualmente para combinar a entrega dos presentes e prestar contas internamente. Não há envio de mensagens em massa, venda ou compartilhamento com terceiros.</p>

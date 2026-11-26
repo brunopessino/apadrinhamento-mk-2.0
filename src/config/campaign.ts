@@ -33,16 +33,15 @@ export const CAMPAIGN_TEXTS = {
   mainMessage: 'Compartilhe amor e veja o Natal se multiplicar em sorrisos.',
   heroTitle: 'Apadrinhamento de Natal 2026',
   institutionalMessage:
-    'O Natal é tempo de amor, de carinho e de gestos que aquecem o coração. Você pode apadrinhar um participante e presentear com o que puder. Não precisa ser exatamente o que foi pedido. O que vale é o cuidado, o afeto e o acolhimento.',
+    'O Natal é tempo de amor, de carinho e de gestos que aquecem o coração. Você pode apadrinhar um participante e presentear com o que puder. O que vale é o cuidado, o afeto e o acolhimento.',
   chain: 'Participe dessa corrente de amor e faça parte dessa magia de Natal.',
-  giftNote: 'O presente sugerido é uma orientação, não uma obrigação.',
+  giftNote: 'Use os tamanhos de roupa e calçado como referência.',
   steps: [
     { title: 'Escolha um participante', text: 'Navegue pelo catálogo e escolha quem você gostaria de presentear.' },
     { title: 'Confirme seu apadrinhamento', text: 'Informe seu nome e WhatsApp. Não é preciso criar conta.' },
     { title: 'Prepare seu presente com carinho', text: 'Presenteie com o que puder. O cuidado é o que vale.' },
   ],
   guidelines: [
-    'O presente sugerido é uma orientação, não uma obrigação.',
     'Você pode presentear conforme as suas possibilidades; não há valor mínimo.',
     'A organização poderá entrar em contato pelo WhatsApp informado para combinar a entrega.',
   ],
@@ -68,3 +67,9 @@ export const DATA_MODE = (import.meta.env.VITE_DATA_MODE as string | undefined) 
 /** Pré-visualização embutida (ex.: página no claude.ai): roteamento em memória, sem URLs próprias. */
 export const IS_EMBED = (import.meta.env.VITE_ROUTER as string | undefined) === 'memory';
 export const PHOTO_MODE = (import.meta.env.VITE_PHOTO_MODE as string | undefined) === 'storage' ? 'storage' : 'inline';
+
+/** Esta campanha não usa presente sugerido: remove menções a ele de textos salvos na campanha. */
+const GIFT_HINT = /presente sugerido|o que foi pedido/i;
+export const campaignGuidelines = (list?: string[]) => (list?.length ? list : CAMPAIGN_TEXTS.guidelines).filter((g) => !GIFT_HINT.test(g));
+export const cleanInstitutional = (text?: string) =>
+  (text ?? CAMPAIGN_TEXTS.institutionalMessage).split(/(?<=[.!?])\s+/).filter((f) => !GIFT_HINT.test(f)).join(' ');

@@ -24,7 +24,6 @@ const LAST = ['Aurora Exemplo', 'Fictício Silva', 'Demonstração Souza', 'Test
 const GROUPS = ['Bateria', 'Percussão', 'Pandeiro', 'Violão', 'Guitarra / Contra-baixo', 'Violino', 'Cavaquinho', 'Flauta Doce', 'Flauta Transversal'];
 const CLOTHES = ['10', '12', '14', 'P', 'M', 'G', 'GG', 'P adulto', 'M / 42'];
 const SHOES = ['30', '32', '34', '36', '38', '38/39', '40', '42', '43'];
-const GIFTS = ['Estante de partitura', 'Capa para instrumento', 'Livro de histórias', 'Jogo de cordas', 'Mochila', 'Fone de ouvido', '', 'Kit de material escolar', 'Camiseta', ''];
 
 export function campaignFor(year: number, status: Campaign['status']): Campaign {
   return {
@@ -67,7 +66,7 @@ export function buildSeed(): DemoSeed {
     const p: PrivateParticipant = {
       id, campaignId: cid, fullName, displayName: displayNameFrom(fullName), category, age, ageRaw: String(age),
       group: GROUPS[i % GROUPS.length], clothingSize: CLOTHES[i % CLOTHES.length], shoeSize: SHOES[(i * 3) % SHOES.length],
-      giftSuggestion: GIFTS[i % GIFTS.length], publicationAuthorized: opts.published, published: opts.published,
+      giftSuggestion: '', publicationAuthorized: opts.published, published: opts.published,
       archived: false, dedupeKey: '', photoData: opts.photo ? syntheticAvatar(i) : undefined,
       createdAt: new Date(Date.UTC(Number(cid), 9, 10 + (i % 15))).toISOString(),
     };

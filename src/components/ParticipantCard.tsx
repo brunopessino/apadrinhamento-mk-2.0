@@ -93,12 +93,6 @@ export const ParticipantCard = memo(function ParticipantCard({ p, pix, onSponsor
             ))}
           </dl>
         )}
-        {!compact && p.giftSuggestion && (
-          <div className="rounded-xl bg-cream-200/70 px-3 py-2 text-sm">
-            <span className="flex items-center gap-1.5 font-semibold text-burgundy"><Gift className="h-4 w-4" aria-hidden="true" />Presente sugerido</span>
-            <span className="mt-0.5 block text-graphite">{p.giftSuggestion}</span>
-          </div>
-        )}
         <div className="mt-auto pt-1">
           {p.sponsored ? (
             <button type="button" disabled className="btn w-full border border-pine/25 bg-pine/5 px-5 py-2.5 text-pine" aria-label={`${p.displayName} já foi apadrinhado`}>

@@ -12,7 +12,7 @@ export function toPublicFields(p: Pick<PrivateParticipant, 'campaignId' | 'displ
     group: p.group,
     clothingSize: p.clothingSize,
     shoeSize: p.shoeSize,
-    giftSuggestion: p.giftSuggestion,
+    giftSuggestion: '', // campanha sem presente sugerido: nunca publicado
   };
   if (p.photoUrl) out.photoUrl = p.photoUrl;
   if (p.photoData) out.photoData = p.photoData;

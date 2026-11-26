@@ -95,3 +95,12 @@ describe('padronização de nomes', () => {
     expect(standardizeName('Íris')).toBe('Íris');
   });
 });
+
+import { campaignGuidelines, cleanInstitutional } from '@/config/campaign';
+describe('campanha sem presente sugerido', () => {
+  it('remove menções salvas na campanha', () => {
+    expect(campaignGuidelines(['O presente sugerido é uma orientação, não uma obrigação.', 'Não há valor mínimo.'])).toEqual(['Não há valor mínimo.']);
+    expect(cleanInstitutional('O Natal é tempo de amor. Não precisa ser exatamente o que foi pedido. O que vale é o cuidado.')).toBe('O Natal é tempo de amor. O que vale é o cuidado.');
+    expect(campaignGuidelines(undefined).some((g) => /sugerido/i.test(g))).toBe(false);
+  });
+});

@@ -5,7 +5,7 @@ import type { Campaign, PublicParticipant, SponsorResult } from '@/types';
 import { Dialog } from './ui/Dialog';
 import { ChristmasCelebration, CelebrationBoundary } from './ChristmasCelebration';
 import { GiftBoxArt } from './decor/Decor';
-import { CAMPAIGN_TEXTS, IS_EMBED, SITE_URL } from '@/config/campaign';
+import { CAMPAIGN_TEXTS, IS_EMBED, SITE_URL, campaignGuidelines } from '@/config/campaign';
 import { isValidBrPhone, maskPhone } from '@/lib/phone';
 import { useData } from '@/hooks/DataContext';
 import { useClipboard } from '@/hooks/useClipboard';
@@ -99,7 +99,7 @@ export function SponsorDialog({ participant, live, campaign, onClose, onConfirme
           <div className="mx-auto mt-4 max-w-md text-left text-sm">
             <p className="font-semibold text-burgundy">Orientações</p>
             <ul className="mt-1 list-disc space-y-1 pl-5 text-graphite">
-              {(campaign.guidelines?.length ? campaign.guidelines : CAMPAIGN_TEXTS.guidelines).map((g) => <li key={g}>{g}</li>)}
+              {campaignGuidelines(campaign.guidelines).map((g) => <li key={g}>{g}</li>)}
               <li>{campaign.deliveryInfo?.trim() || CAMPAIGN_TEXTS.deliveryFallback}</li>
             </ul>
             <p className="mt-2 text-xs text-muted">Guarde o número do protocolo. Ele identifica o seu apadrinhamento junto à organização.</p>
@@ -147,9 +147,8 @@ export function SponsorDialog({ participant, live, campaign, onClose, onConfirme
             <div className="rounded-2xl border border-gold/40 bg-cream px-4 py-3 text-sm">
               <p className="font-semibold text-burgundy">Orientações da campanha</p>
               <ul className="mt-1 list-disc space-y-1 pl-5">
-                {(campaign.guidelines?.length ? campaign.guidelines : CAMPAIGN_TEXTS.guidelines).map((g) => <li key={g}>{g}</li>)}
+                {campaignGuidelines(campaign.guidelines).map((g) => <li key={g}>{g}</li>)}
               </ul>
-              {participant.giftSuggestion && <p className="mt-2 text-muted">Presente sugerido: <span className="font-medium text-graphite">{participant.giftSuggestion}</span> — {CAMPAIGN_TEXTS.giftNote.toLowerCase()}</p>}
             </div>
             <div className="flex items-start gap-3">
               <input id={ids.consent} type="checkbox" checked={consent} onChange={(e) => setConsent(e.target.checked)} disabled={locked}
