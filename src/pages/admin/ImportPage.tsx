@@ -99,8 +99,9 @@ export default function ImportPage() {
             )}
             <div>
               <span className="label">Fotos (opcional): o .zip baixado do Google Drive ou as fotos soltas</span>
-              <span className="btn-ghost cursor-pointer"><ImageIcon className="h-4 w-4" aria-hidden="true" />{photos.length ? `${photos.length} foto(s) carregada(s)` : 'Selecionar fotos ou .zip'}
-                <input type="file" multiple accept=".zip,image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp" className="sr-only" onChange={(e) => onPhotos(e.target.files)} data-testid="import-photos" /></span>
+              <label className="btn-ghost cursor-pointer" onDragOver={(e) => e.preventDefault()} onDrop={(e) => { e.preventDefault(); onPhotos(e.dataTransfer.files); }}>
+                <ImageIcon className="h-4 w-4" aria-hidden="true" />{photos.length ? `${photos.length} foto(s) carregada(s)` : 'Selecionar fotos ou .zip'}
+                <input type="file" multiple accept=".zip,application/zip,application/x-zip-compressed,image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp" className="sr-only" onChange={(e) => onPhotos(e.target.files)} data-testid="import-photos" /></label>
               <p className="mt-1 text-xs text-muted">Cada foto é ligada à pessoa pelo nome no arquivo (ex.: "Maria Souza.jpg" ou "IMG_1234 - Maria Souza.jpg").</p>
               {photos.length > 0 && <p className="mt-1 text-sm font-medium" data-testid="photo-match-count">{photoMatch.size} de {result.records.length} pessoas com foto encontrada.</p>}
             </div>
