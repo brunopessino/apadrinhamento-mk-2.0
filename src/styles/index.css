@@ -227,3 +227,10 @@ dialog.mk-dialog[open] > .dialog-panel { animation: dialog-in .28s var(--ease-ou
 @keyframes cc-settle { 0% { transform: scale(1.05); } 100% { transform: scale(.7) translateY(24px); } }
 @keyframes cc-text { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
 @media (prefers-reduced-motion: reduce) { .cc-show * { animation: none !important; transition: none !important; } }
+
+/* Papai Noel acenando na página inicial */
+.santa-wave { transform-box: view-box; transform-origin: 150px 190px; animation: santa-wave 1.6s ease-in-out infinite; }
+@keyframes santa-wave { 0%, 100% { transform: rotate(-4deg); } 25% { transform: rotate(14deg); } 50% { transform: rotate(-6deg); } 75% { transform: rotate(12deg); } }
+.santa-bob { animation: santa-bob 3.2s ease-in-out infinite; transform-origin: 50% 100%; }
+@keyframes santa-bob { 0%, 100% { transform: translateY(0) rotate(0); } 50% { transform: translateY(-4px) rotate(-1.5deg); } }
+@media (prefers-reduced-motion: reduce) { .santa-wave, .santa-bob { animation: none !important; } }

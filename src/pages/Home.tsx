@@ -11,6 +11,7 @@ import { PixBox } from '@/components/PixBox';
 import { MusicNote, PineBranch, RibbonBow, Sparkle, Star, Logo, Instagram } from '@/components/decor/Decor';
 import { Garland, Ornament, Snowfall } from '@/components/decor/Festive';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
+import { WavingSanta } from '@/components/decor/WavingSanta';
 
 function Hero({ campaign }: { campaign: Campaign | null }) {
   const title = campaign?.heroTitle ?? CAMPAIGN_TEXTS.heroTitle;
@@ -44,6 +45,7 @@ function Hero({ campaign }: { campaign: Campaign | null }) {
         </div>
         <HeroArt />
       </div>
+      <div className="santa-bob pointer-events-none absolute bottom-10 right-4 z-[2] w-24 sm:right-8 sm:w-32 lg:hidden" aria-hidden="true"><WavingSanta className="h-auto w-full" /></div>
       <Garland className="relative z-[2] -mb-1" />
     </section>
   );
@@ -67,8 +69,9 @@ function HeroArt() {
         </div>
       </div>
       <div className="absolute -left-6 bottom-6 -rotate-6 rounded-xl bg-pine px-4 py-2.5 text-cream shadow-lift">
-        <p className="flex items-center gap-2 text-sm font-semibold"><Gift className="h-4 w-4 text-yellow" />Presente com o que puder</p>
+        <p className="flex items-center gap-2 text-sm font-semibold"><Gift className="h-4 w-4 text-yellow" />Presenteie com o que puder</p>
       </div>
+      <div className="santa-bob absolute -bottom-20 -right-6 z-[3] w-40"><WavingSanta className="h-auto w-full" /></div>
       <Sparkle className="twinkle absolute right-2 top-28 h-6 w-6 text-yellow" />
       <Sparkle className="twinkle absolute -left-2 top-48 h-4 w-4 text-cream" style={{ animationDelay: '1.2s' }} />
     </div>
