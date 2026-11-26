@@ -1,29 +1,114 @@
-
 > apadrinhamento-mk@2.0.0 test:rules
 > firebase emulators:exec --only firestore,storage --project demo-mk-test "vitest run --config vitest.rules.config.ts"
 
 i  emulators: Starting emulators: firestore, storage
 i  emulators: Detected demo project ID "demo-mk-test", emulated services will use a demo configuration and attempts to access non-emulated services for this project will fail.
-⚠  hub: Error when trying to check port 4400 on ::1: Error: listen EAFNOSUPPORT: address family not supported ::1:4400
-⚠  hub: Port 4400 is available on 127.0.0.1 but not ::1. This may cause issues with some clients.
-⚠  hub: If you encounter connectivity issues, consider switching to a different port or explicitly specifying "host": "<ip address>" instead of hostname in firebase.json
-⚠  logging: Error when trying to check port 4500 on ::1: Error: listen EAFNOSUPPORT: address family not supported ::1:4500
-⚠  logging: Port 4500 is available on 127.0.0.1 but not ::1. This may cause issues with some clients.
-⚠  logging: If you encounter connectivity issues, consider switching to a different port or explicitly specifying "host": "<ip address>" instead of hostname in firebase.json
-⚠  firestore: Error when trying to check port 8080 on ::1: Error: listen EAFNOSUPPORT: address family not supported ::1:8080
-⚠  firestore: Port 8080 is available on 127.0.0.1 but not ::1. This may cause issues with some clients.
-⚠  firestore: If you encounter connectivity issues, consider switching to a different port or explicitly specifying "host": "<ip address>" instead of hostname in firebase.json
-⚠  firestore.websocket: Error when trying to check port 9150 on ::1: Error: listen EAFNOSUPPORT: address family not supported ::1:9150
-⚠  firestore: Port 9150 is available on 127.0.0.1 but not ::1. This may cause issues with some clients.
-⚠  firestore: If you encounter connectivity issues, consider switching to a different port or explicitly specifying "host": "<ip address>" instead of hostname in firebase.json
-⚠  storage: Error when trying to check port 9199 on ::1: Error: listen EAFNOSUPPORT: address family not supported ::1:9199
-⚠  storage: Port 9199 is available on 127.0.0.1 but not ::1. This may cause issues with some clients.
-⚠  storage: If you encounter connectivity issues, consider switching to a different port or explicitly specifying "host": "<ip address>" instead of hostname in firebase.json
-i  firestore: downloading cloud-firestore-emulator-v1.22.0.jar...
-⚠  Unable to fetch the CLI MOTD and remote config. This is not a fatal error, but may indicate an issue with your network connection.
-i  emulators: Shutting down emulators.
-i  firestore: Stopping Firestore Emulator
-i  hub: Stopping emulator hub
+i  firestore: Firestore Emulator logging to firestore-debug.log
++  firestore: Firestore Emulator was started in standard edition.
++  firestore: Firestore Emulator UI websocket is running on 9150.
+!  Unexpected rules runtime error: WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::arrayBaseOffset has been called by com.google.protobuf.UnsafeUtil$MemoryAccessor (file:/C:/Users/bruno/.cache/firebase/emulators/cloud-storage-rules-runtime-v1.1.3.jar)
+WARNING: Please consider reporting this to the maintainers of class com.google.protobuf.UnsafeUtil$MemoryAccessor
+WARNING: sun.misc.Unsafe::arrayBaseOffset will be removed in a future release
 
-Error: Failed to make request to https://storage.googleapis.com/firebase-preview-drop/emulator/cloud-firestore-emulator-v1.22.0.jar
-exit 1
+i  Running script: vitest run --config vitest.rules.config.ts
+
+ RUN  v5.1.2 C:/Projetos/apadrinhamento-mk-2.0
+
+stderr | tests/rules/firestore.rules.test.ts > apadrinhamento anônimo > bloqueia manipulação: só marcar sponsored, ou só criar o registro
+[2026-11-26T18:15:04.601Z]  @firebase/firestore: Firestore (13.4.0): GrpcConnection RPC 'Write' stream 0x676db4f7 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L69:26 for 'update' @ L69, false for 'update' @ L156, false for 'update' @ L69, false for 'update' @ L156
+
+stderr | tests/rules/firestore.rules.test.ts > apadrinhamento anônimo > bloqueia manipulação: só marcar sponsored, ou só criar o registro
+[2026-11-26T18:15:04.637Z]  @firebase/firestore: Firestore (13.4.0): GrpcConnection RPC 'Write' stream 0x676db4f8 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L98:26 for 'create' @ L98, false for 'create' @ L156, false for 'update' @ L99, false for 'update' @ L156, false for 'create' @ L98, false for 'create' @ L156
+
+stderr | tests/rules/firestore.rules.test.ts > apadrinhamento anônimo > anônimo não cancela/libera
+[2026-11-26T18:15:05.201Z]  @firebase/firestore: Firestore (13.4.0): GrpcConnection RPC 'Write' stream 0x676db50b error. Code: 7 Message: 7 PERMISSION_DENIED: 
+false for 'delete' @ L104, false for 'delete' @ L156
+
+stderr | tests/rules/firestore.rules.test.ts > apadrinhamento anônimo > anônimo não cancela/libera
+[2026-11-26T18:15:05.237Z]  @firebase/firestore: Firestore (13.4.0): GrpcConnection RPC 'Write' stream 0x676db50c error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L69:26 for 'update' @ L69, false for 'update' @ L156, false for 'update' @ L69, false for 'update' @ L156
+
+stderr | tests/rules/firestore.rules.test.ts > consistência público/privado > admin não pode marcar disponível enquanto existe apadrinhamento ativo
+[2026-11-26T18:15:05.338Z]  @firebase/firestore: Firestore (13.4.0): GrpcConnection RPC 'Write' stream 0x676db510 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L69:26 for 'update' @ L69, false for 'update' @ L156, false for 'update' @ L69, false for 'update' @ L156
+
+stderr | tests/rules/firestore.rules.test.ts > equipe e permissões > admin lê e cancela/libera; operador avança status mas não cancela
+[2026-11-26T18:15:05.798Z]  @firebase/firestore: Firestore (13.4.0): GrpcConnection RPC 'Write' stream 0x676db521 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L99:26 for 'update' @ L99, false for 'update' @ L156, false for 'update' @ L99, false for 'update' @ L156
+
+stderr | tests/rules/firestore.rules.test.ts > equipe e permissões > admin lê e cancela/libera; operador avança status mas não cancela
+[2026-11-26T18:15:05.816Z]  @firebase/firestore: Firestore (13.4.0): GrpcConnection RPC 'Write' stream 0x676db522 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L104:26 for 'delete' @ L104, false for 'delete' @ L156, false for 'delete' @ L104, false for 'delete' @ L156
+
+stderr | tests/rules/firestore.rules.test.ts > equipe e permissões > operador não publica nem edita participante publicado
+[2026-11-26T18:15:05.931Z]  @firebase/firestore: Firestore (13.4.0): GrpcConnection RPC 'Write' stream 0x676db525 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L69:26 for 'update' @ L69, false for 'update' @ L156, false for 'update' @ L69, false for 'update' @ L156
+
+stderr | tests/rules/firestore.rules.test.ts > equipe e permissões > operador não publica nem edita participante publicado
+[2026-11-26T18:15:05.959Z]  @firebase/firestore: Firestore (13.4.0): GrpcConnection RPC 'Write' stream 0x676db526 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L91:26 for 'update' @ L91, false for 'update' @ L156, false for 'update' @ L91, false for 'update' @ L156
+
+stderr | tests/rules/firestore.rules.test.ts > equipe e permissões > operador não publica nem edita participante publicado
+[2026-11-26T18:15:06.006Z]  @firebase/firestore: Firestore (13.4.0): GrpcConnection RPC 'Write' stream 0x676db528 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L90:26 for 'create' @ L90, false for 'create' @ L156, evaluation error at L91:26 for 'update' @ L91, false for 'update' @ L156, false for 'create' @ L90, false for 'create' @ L156
+
+stderr | tests/rules/firestore.rules.test.ts > equipe e permissões > logs são append-only e assinados pelo próprio usuário
+[2026-11-26T18:15:06.225Z]  @firebase/firestore: Firestore (13.4.0): GrpcConnection RPC 'Write' stream 0x676db52e error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L42:24 for 'create' @ L42, false for 'create' @ L156, false for 'update' @ L49, false for 'update' @ L156, false for 'create' @ L42, false for 'create' @ L156
+
+stderr | tests/rules/firestore.rules.test.ts > equipe e permissões > logs são append-only e assinados pelo próprio usuário
+[2026-11-26T18:15:06.258Z]  @firebase/firestore: Firestore (13.4.0): GrpcConnection RPC 'Write' stream 0x676db52f error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L42:24 for 'create' @ L42, false for 'create' @ L156, false for 'update' @ L49, false for 'update' @ L156, false for 'create' @ L42, false for 'create' @ L156
+
+stderr | tests/rules/firestore.rules.test.ts > equipe e permissões > logs são append-only e assinados pelo próprio usuário
+[2026-11-26T18:15:06.282Z]  @firebase/firestore: Firestore (13.4.0): GrpcConnection RPC 'Write' stream 0x676db530 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+false for 'update' @ L49, false for 'update' @ L156
+
+stderr | tests/rules/firestore.rules.test.ts > equipe e permissões > logs são append-only e assinados pelo próprio usuário
+[2026-11-26T18:15:06.305Z]  @firebase/firestore: Firestore (13.4.0): GrpcConnection RPC 'Write' stream 0x676db531 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+false for 'delete' @ L49, false for 'delete' @ L156
+
+stderr | tests/rules/firestore.rules.test.ts > equipe e permissões > legado 2025 é somente leitura (preservação)
+[2026-11-26T18:15:06.391Z]  @firebase/firestore: Firestore (13.4.0): GrpcConnection RPC 'Write' stream 0x676db534 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+false for 'update' @ L151, false for 'update' @ L156
+
+stderr | tests/rules/firestore.rules.test.ts > equipe e permissões > legado 2025 é somente leitura (preservação)
+[2026-11-26T18:15:06.408Z]  @firebase/firestore: Firestore (13.4.0): GrpcConnection RPC 'Write' stream 0x676db535 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+false for 'delete' @ L151, false for 'delete' @ L156
+
+stderr | tests/rules/firestore.rules.test.ts > equipe e permissões > legado 2025 é somente leitura (preservação)
+[2026-11-26T18:15:06.425Z]  @firebase/firestore: Firestore (13.4.0): GrpcConnection RPC 'Write' stream 0x676db536 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+false for 'delete' @ L61, false for 'delete' @ L156
+
+ ✓ tests/rules/firestore.rules.test.ts (17 tests) 6401ms
+   ✓ leitura pública (2)
+     ✓ lê participantes publicados apenas com o filtro published == true 698ms
+     ✓ não lê dados privados, apadrinhamentos, logs nem o legado 2025 342ms
+   ✓ apadrinhamento anônimo (7)
+     ✓ confirma de forma atômica 165ms
+     ✓ segunda confirmação do mesmo participante é recusada pelo servidor 174ms
+     ✓ tentativas simultâneas: no máximo uma vence 2175ms
+     ✓ bloqueia manipulação: só marcar sponsored, ou só criar o registro 111ms
+     ✓ bloqueia campos extras, telefone inválido, consentimento ausente e alteração de outros campos 311ms
+     ✓ não aceita em rascunho nem em campanha fechada 126ms
+     ✓ anônimo não cancela/libera 162ms
+   ✓ consistência público/privado (3)
+     ✓ admin não pode marcar disponível enquanto existe apadrinhamento ativo 122ms
+     ✓ cancelamento real (sponsoredAt: null) libera para novo apadrinhamento 199ms
+     ✓ participantes de campanha arquivada não são públicos 94ms
+   ✓ equipe e permissões (5)
+     ✓ admin lê e cancela/libera; operador avança status mas não cancela 204ms
+     ✓ operador não publica nem edita participante publicado 149ms
+     ✓ conta inativa ou sem cadastro não tem acesso 100ms
+     ✓ logs são append-only e assinados pelo próprio usuário 199ms
+     ✓ legado 2025 é somente leitura (preservação) 120ms
+
+ Test Files  1 passed (1)
+      Tests  17 passed (17)
+   Start at  15:14:59
+   Duration  6.86s (tests 96%, import 4%, transform 1%)
+
++  Script exited successfully (code 0)
