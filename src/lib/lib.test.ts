@@ -87,7 +87,7 @@ describe('filtros e indicadores', () => {
 import { standardizeName } from './text';
 describe('padronização de nomes', () => {
   it('iniciais maiúsculas, partículas minúsculas, sem ponto final', () => {
-    expect(standardizeName('DAIANE SANTOS')).toBe('Daiane Santos');
+    expect(standardizeName('MARIANA ALVES')).toBe('Mariana Alves');
     expect(standardizeName('Kamilly  vitória ')).toBe('Kamilly Vitória');
     expect(standardizeName('Guilherme França da Costa Valério de Souza.')).toBe('Guilherme França da Costa Valério de Souza');
     expect(standardizeName("Aghata D'Eleutério Borges")).toBe("Aghata D'Eleutério Borges");
